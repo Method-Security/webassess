@@ -1,0 +1,23 @@
+checks:
+  golint:
+    filters:
+      - value: "should have comment or be unexported"
+      - value: "or a comment on this block"
+    exclude:
+      paths:
+        - generated/**
+  deadcode:
+    exclude:
+      paths:
+        - main.go
+  varcheck:
+    exclude:
+      paths:
+        - main.go
+  importalias:
+    exclude:
+      paths: []
+  errcheck:
+    exclude:
+      paths:
+        - generated/**
