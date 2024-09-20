@@ -2,6 +2,7 @@ package ollama
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,7 +10,13 @@ import (
 	"net/http"
 	"os/exec"
 	"time"
+
+	"github.com/palantir/witchcraft-go-logging/wlog/svclog/svc1log"
 )
+
+const OllamaStandardBaseURL = "http://127.0.0.1:11434"
+
+var logger = svc1log.FromContext(context.Background())
 
 type Model struct {
 	Name              string `json:"name"`
@@ -55,6 +62,17 @@ func GetAvailableOllamaModels(url string) ([]Model, error) {
 	}
 
 	return result.Models, nil
+}
+
+func IsAllowedModel(modelName string) bool {
+	var isAllowed bool = false
+	for _, allowedModelName := range AllowedOllamaModels {
+		if allowedModelName == modelName {
+			isAllowed = true
+			break
+		}
+	}
+	return isAllowed
 }
 
 func ModelReady(url string, modelName string) bool {
@@ -142,14 +160,15 @@ func DownloadOllamaModel(modelName string, url string) error {
 
 	// Print progress updates
 	for status := range progress {
-		fmt.Println(status)
+		logger.Info(status)
 	}
 
 	return nil
 }
 
-func IsOllamaRunning(url string) bool {
-	resp, err := http.Get(url)
+func IsOllamaRunning(ollamaBaseURL string) bool {
+	tagsURL := ollamaBaseURL + "/api/tags"
+	resp, err := http.Get(tagsURL)
 	if err != nil {
 		return false
 	}

@@ -41,3 +41,6 @@ generated/python/**
 # IDE
 .idea/
 .vscode/
+
+# Binaries
+webassess

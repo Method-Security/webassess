@@ -41,7 +41,7 @@ func CreateHTMLAnalysisPrompt(htmlCode string) string {
 	return strings.Join(promptParts, "\n")
 }
 
-func CreateHTMLSynthesisPrompt(combinedOutput string) string {
+func CreateHTMLSynthesisPrompt(firstOutput string, secondOutput string) string {
 	promptParts := []string{
 		"Task: Synthesize the following two JSON outputs from an HTML code analysis into a single, comprehensive analysis.",
 		"",
@@ -55,8 +55,11 @@ func CreateHTMLSynthesisPrompt(combinedOutput string) string {
 		"   - potentialSensitiveData: true if any sensitive data was found in either analysis, otherwise false",
 		"   - sensitiveDataSummary: A detailed summary of all potential sensitive data found (omit if none found)",
 		"",
-		"Here are the two analysis outputs to synthesize:",
-		combinedOutput,
+		"Here is the first analysis output to synthesize:",
+		firstOutput,
+		"",
+		"Here is the second analysis output to synthesize:",
+		secondOutput,
 		"",
 		"Provide your synthesized analysis in the specified JSON format:",
 	}

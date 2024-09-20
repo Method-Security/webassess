@@ -49,15 +49,16 @@ func QueryModel(ctx context.Context, client *api.Client, model Model, prompt str
 }
 
 type ModelPromptContentGenerator func(string) string
+type SplitOutputCombinerGenerator func(string, string) string
 
 // ProcessContentRecursively processes the content recursively, splitting it if necessary.
 // The input always gets the same prompt generator call to ensure the instructions are consistent across splits.
-func ProcessContentRecursively(ctx context.Context, client *api.Client, model Model, input string, generator ModelPromptContentGenerator, combiner ModelPromptContentGenerator) (string, error) {
+func ProcessContentRecursively(ctx context.Context, client *api.Client, model Model, input string, generator ModelPromptContentGenerator, combiner SplitOutputCombinerGenerator) (string, error) {
 	content := generator(input)
 	// Attempt to query the model
 	response, err := QueryModel(ctx, client, model, content)
 	if err != nil {
-		if IsContextLengthError(err) && len(input) > 100 {
+		if IsContextLengthError(err) && len(input) > 0 {
 			// If context length is exceeded, split the content and process each half
 			mid := len(input) / 2
 			leftInput := input[:mid]
@@ -76,8 +77,7 @@ func ProcessContentRecursively(ctx context.Context, client *api.Client, model Mo
 			}
 
 			// Combine the results
-			combinedOutput := leftResult + "\n\n" + rightResult
-			combinedPrompt := combiner(combinedOutput)
+			combinedPrompt := combiner(leftResult, rightResult)
 
 			finalResult, err := QueryModel(ctx, client, model, combinedPrompt)
 			if err != nil {

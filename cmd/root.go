@@ -65,6 +65,7 @@ func (a *WebAssess) InitRootCommand() {
 		Short: "Perform an assessment of a security resource with AI at the edge",
 		Long:  `Perform an assessment of a security resource with AI at the edge`,
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
+			logger := svc1log.FromContext(cmd.Context())
 			// Attempt to get Ollama URL from param, otherwise check that it is locally installed
 			// and if it is not locally running, attempt to start ollama
 			ollamaURL, err := cmd.Flags().GetString("ollama-url")
@@ -78,9 +79,9 @@ func (a *WebAssess) InitRootCommand() {
 					return fmt.Errorf(errorMessage)
 				}
 
-				// Check to see if ollama is running without being spawned by the CLI
-				if !ollama.IsOllamaRunning("http://127.0.0.1:11434/api/tags") {
-					fmt.Print("ollama not running on default port, attempting to start ollama...")
+				// Check to see if ollama is running on the standard URL without being spawned by the CLI
+				if !ollama.IsOllamaRunning(ollama.OllamaStandardBaseURL) {
+					logger.Info("ollama not running on default port, attempting to start ollama...")
 					err := ollama.StartOllama()
 					if err != nil {
 						errorMessage := "failed to start ollama: " + err.Error()
@@ -90,14 +91,22 @@ func (a *WebAssess) InitRootCommand() {
 					}
 
 					// Check to see if ollama is running after attempting to start it
-					if !ollama.IsOllamaRunning("http://127.0.0.1:11434/api/tags") {
+					if !ollama.IsOllamaRunning(ollama.OllamaStandardBaseURL) {
 						errorMessage := "ollama could not be started by the CLI"
 						a.OutputSignal.ErrorMessage = &errorMessage
 						a.OutputSignal.Status = 1
 						return fmt.Errorf(errorMessage)
 					}
 				}
-				ollamaURL = "http://127.0.0.1:11434"
+				ollamaURL = ollama.OllamaStandardBaseURL
+			} else {
+				// Check to see if ollama is running on the provided URL
+				if !ollama.IsOllamaRunning(ollamaURL) {
+					errorMessage := "ollama is not running on the provided URL"
+					a.OutputSignal.ErrorMessage = &errorMessage
+					a.OutputSignal.Status = 1
+					return fmt.Errorf(errorMessage)
+				}
 			}
 			a.RootFlags.OllamaURL = ollamaURL
 
@@ -127,7 +136,13 @@ func (a *WebAssess) InitRootCommand() {
 
 			if !ollama.ModelReady(ollamaURL, ollamaModel) {
 				if allowDownload {
-					// Download the model
+					// Download the model only if in allowed list
+					if !ollama.IsAllowedModel(ollamaModel) {
+						errorMessage := fmt.Sprintf("ollama model '%s' is not in the allowed models list", ollamaModel)
+						a.OutputSignal.ErrorMessage = &errorMessage
+						a.OutputSignal.Status = 1
+						return fmt.Errorf(errorMessage)
+					}
 					err := ollama.DownloadOllamaModel(ollamaURL, ollamaModel)
 					if err != nil {
 						errorMessage := "failed to download ollama model: " + err.Error()

@@ -25,7 +25,7 @@ COPY ${CLI_NAME} /opt/method/${CLI_NAME}/service/bin/${CLI_NAME}
 # Install models, ollama needs to be running both for install and entrypoint
 # A single dedicated script is used to have ollama serve be run in the same terminal
 ENV OLLAMA_MODELS=/opt/method/${CLI_NAME}/var/conf/models
-RUN echo '#!/usr/bin/env bash\n\nollama serve &\nsleep 5\nollama list\nollama pull qwen2.5:0.5b\nollama pull qwen2.5:3b\nollama pull gemma2:2b' > /opt/method/${CLI_NAME}/var/conf/setup-ollama.sh
+COPY configs/setup-ollama.sh /opt/method/${CLI_NAME}/var/conf/setup-ollama.sh
 RUN chmod +x /opt/method/${CLI_NAME}/var/conf/setup-ollama.sh
 RUN /opt/method/${CLI_NAME}/var/conf/setup-ollama.sh
 
