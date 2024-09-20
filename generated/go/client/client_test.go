@@ -3,7 +3,7 @@
 package client
 
 import (
-	option "github.com/Method-Security/aiassess/generated/go/option"
+	option "github.com/Method-Security/webassess/generated/go/option"
 	assert "github.com/stretchr/testify/assert"
 	http "net/http"
 	testing "testing"

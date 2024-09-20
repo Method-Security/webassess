@@ -3,7 +3,7 @@
 package option
 
 import (
-	core "github.com/Method-Security/aiassess/generated/go/core"
+	core "github.com/Method-Security/webassess/generated/go/core"
 	http "net/http"
 )
 

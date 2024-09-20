@@ -1,7 +1,15 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
 
 types:
+  UrlAssessment:
+    properties:
+      codeSummary: string
+      potentialVulnerabilities: bool
+      vulnerabilitiesSummary: string
+      potentialSensitiveData: bool
+      sensitiveDataSummary: string
   UrlReport:
     properties:
       target: string
+      output: string
       errors: optional<list<string>>

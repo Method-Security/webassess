@@ -1,16 +1,15 @@
-module github.com/Method-Security/aiassess
+module github.com/Method-Security/webassess
 
-go 1.22
-
-toolchain go1.22.5
+go 1.22.5
 
 require (
 	github.com/Method-Security/pkg v0.0.2
 	github.com/google/uuid v1.6.0
+	github.com/ollama/ollama v0.3.11
 	github.com/palantir/pkg/datetime v1.1.0
 	github.com/palantir/witchcraft-go-logging v1.51.0
 	github.com/spf13/cobra v1.8.1
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
