@@ -94,6 +94,8 @@ dockers:
           - "--label=org.opencontainers.image.url=https://method.security"
           - "--label=org.opencontainers.image.documentation=https://github.com/method-security/webassess"
           - "--platform=linux/amd64"
+      extra_files:
+          - configs/
     - image_templates:
           - "docker.io/methodsecurity/webassess:{{ .Version }}-arm64"
           - "docker.io/methodsecurity/webassess:latest-arm64"
@@ -115,6 +117,8 @@ dockers:
           - "--label=org.opencontainers.image.url=https://method.security"
           - "--label=org.opencontainers.image.documentation=https://github.com/method-security/webassess"
           - "--platform=linux/arm64"
+      extra_files:
+          - configs/
 
 docker_manifests:
     - name_template: "ghcr.io/method-security/webassess:{{ .Version }}"
