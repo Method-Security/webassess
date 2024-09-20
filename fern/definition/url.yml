@@ -4,9 +4,9 @@ types:
   UrlAssessment:
     properties:
       codeSummary: string
-      potentialVulnerabilities: bool
+      potentialVulnerabilities: boolean
       vulnerabilitiesSummary: string
-      potentialSensitiveData: bool
+      potentialSensitiveData: boolean
       sensitiveDataSummary: string
   UrlReport:
     properties:
