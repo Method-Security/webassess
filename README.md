@@ -16,7 +16,6 @@ The types of assessments that webassess can conduct are constantly growing. For 
 
 To learn more about webassess, please see the [Documentation site](https://method-security.github.io/webassess/) for the most detailed information.
 
-
 ## Quick Start
 
 ### Get webassess
