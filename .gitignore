@@ -24,28 +24,23 @@ go.work.sum
 
 # Goreleaser
 /dist
-/artifacts
-/output
 
 # Env Files
 .env/
 !.env/example.env
 
-# Docs
+# mkdocs
 /site
+
+# Fern Python Testing
+generated/python/**
 
 # Don't ignore vendors
 !vendor/**
 
-# IDE files
+# IDE
 .idea/
 .vscode/
 
-# Fern Python
-generated/python/**
-
-# aiassess binary
-/aiassess
-
-# .DS_Store
-.DS_Store
+# Binaries
+webassess

@@ -3,8 +3,8 @@
 package client
 
 import (
-	core "github.com/Method-Security/aiassess/generated/go/core"
-	option "github.com/Method-Security/aiassess/generated/go/option"
+	core "github.com/Method-Security/webassess/generated/go/core"
+	option "github.com/Method-Security/webassess/generated/go/option"
 	http "net/http"
 )
 

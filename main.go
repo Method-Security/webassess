@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/Method-Security/aiassess/cmd"
+	"github.com/Method-Security/webassess/cmd"
 )
 
 var version = "none"
@@ -12,11 +12,11 @@ var version = "none"
 func main() {
 	flag.Parse()
 
-	aiassess := cmd.NewAIAssess(version)
-	aiassess.InitRootCommand()
-	aiassess.InitURLAssess()
+	webassess := cmd.NewWebAssess(version)
+	webassess.InitRootCommand()
+	webassess.InitURLAssess()
 
-	if err := aiassess.RootCmd.Execute(); err != nil {
+	if err := webassess.RootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 

@@ -1,4 +1,4 @@
-package aiassess
+package webassess
 
 import (
 	"time"

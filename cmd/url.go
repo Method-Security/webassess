@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"github.com/Method-Security/aiassess/internal/url"
+	"github.com/Method-Security/webassess/internal/url"
 	"github.com/spf13/cobra"
 )
 
-// InitURLAssess initializes the url command for the aiassess CLI. This command is used to perform dynamic analysis
+// InitURLAssess initializes the url command for the webassess CLI. This command is used to perform dynamic analysis
 // of the contents and files hosted on a URL.
-func (a *AIAssess) InitURLAssess() {
+func (a *WebAssess) InitURLAssess() {
 	urlCmd := &cobra.Command{
 		Use:   "url",
 		Short: "Perform a URL content assessment against a URL target",
@@ -21,7 +21,7 @@ func (a *AIAssess) InitURLAssess() {
 				return
 			}
 
-			report := url.PerformURLAssess(cmd.Context(), target)
+			report := url.PerformURLAssess(cmd.Context(), target, a.RootFlags.OllamaModel)
 
 			a.OutputSignal.Content = report
 		},

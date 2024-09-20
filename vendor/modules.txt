@@ -1,4 +1,4 @@
-# github.com/Method-Security/pkg v0.0.2
+# github.com/Method-Security/pkg v0.0.3
 ## explicit; go 1.22
 github.com/Method-Security/pkg/signal
 github.com/Method-Security/pkg/writer
@@ -20,6 +20,12 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.20
 ## explicit; go 1.15
 github.com/mattn/go-isatty
+# github.com/ollama/ollama v0.3.11
+## explicit; go 1.22.5
+github.com/ollama/ollama/api
+github.com/ollama/ollama/envconfig
+github.com/ollama/ollama/format
+github.com/ollama/ollama/version
 # github.com/palantir/pkg v1.1.0
 ## explicit; go 1.19
 github.com/palantir/pkg
@@ -41,11 +47,11 @@ github.com/palantir/pkg/safeyaml
 # github.com/palantir/pkg/transform v1.1.0
 ## explicit; go 1.19
 github.com/palantir/pkg/transform
-# github.com/palantir/witchcraft-go-error v1.34.0
+# github.com/palantir/witchcraft-go-error v1.38.0
 ## explicit; go 1.21
 github.com/palantir/witchcraft-go-error
 github.com/palantir/witchcraft-go-error/internal/errors
-# github.com/palantir/witchcraft-go-logging v1.51.0
+# github.com/palantir/witchcraft-go-logging v1.57.0
 ## explicit; go 1.21
 github.com/palantir/witchcraft-go-logging/conjure/witchcraft/api/logging
 github.com/palantir/witchcraft-go-logging/internal/gopath
@@ -55,10 +61,10 @@ github.com/palantir/witchcraft-go-logging/wlog-tmpl/logentryformatter
 github.com/palantir/witchcraft-go-logging/wlog-tmpl/logs
 github.com/palantir/witchcraft-go-logging/wlog/internal
 github.com/palantir/witchcraft-go-logging/wlog/svclog/svc1log
-# github.com/palantir/witchcraft-go-params v1.31.0
+# github.com/palantir/witchcraft-go-params v1.35.0
 ## explicit; go 1.21
 github.com/palantir/witchcraft-go-params
-# github.com/palantir/witchcraft-go-tracing v1.33.0
+# github.com/palantir/witchcraft-go-tracing v1.37.0
 ## explicit; go 1.21
 github.com/palantir/witchcraft-go-tracing/wtracing
 # github.com/pmezard/go-difflib v1.0.0
@@ -70,8 +76,8 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.8.4
-## explicit; go 1.20
+# github.com/stretchr/testify v1.9.0
+## explicit; go 1.17
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
 # golang.org/x/sys v0.21.0
