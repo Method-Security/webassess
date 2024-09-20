@@ -13,7 +13,6 @@ on:
 jobs:
   build:
     name: Test Build
-    runs-on: ubuntu-latest-m
     uses: ./.github/workflows/reusable-build.yml
     with:
       goreleaser_config: goreleaser.yml
