@@ -73,10 +73,8 @@ func (a *WebAssess) InitRootCommand() {
 				// Check for ollama in the path
 				_, pathErr := exec.LookPath("ollama")
 				if pathErr != nil {
-					errorMessage := "ollama is not installed or is not in the system path"
-					a.OutputSignal.ErrorMessage = &errorMessage
-					a.OutputSignal.Status = 1
-					return fmt.Errorf(errorMessage)
+					a.OutputSignal.AddError(errors.New("ollama is not installed or is not in the system path"))
+					return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 				}
 
 				// Check to see if ollama is running on the standard URL without being spawned by the CLI
@@ -84,95 +82,73 @@ func (a *WebAssess) InitRootCommand() {
 					logger.Info("ollama not running on default port, attempting to start ollama...")
 					err := ollama.StartOllama()
 					if err != nil {
-						errorMessage := "failed to start ollama: " + err.Error()
-						a.OutputSignal.ErrorMessage = &errorMessage
-						a.OutputSignal.Status = 1
-						return fmt.Errorf(errorMessage)
+						a.OutputSignal.AddError(errors.New("failed to start ollama:" + err.Error()))
+						return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 					}
 
 					// Check to see if ollama is running after attempting to start it
 					if !ollama.IsOllamaRunning(ollama.OllamaStandardBaseURL) {
-						errorMessage := "ollama could not be started by the CLI"
-						a.OutputSignal.ErrorMessage = &errorMessage
-						a.OutputSignal.Status = 1
-						return fmt.Errorf(errorMessage)
+						a.OutputSignal.AddError(errors.New("ollama could not be started by the CLI"))
+						return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 					}
 				}
 				ollamaURL = ollama.OllamaStandardBaseURL
 			} else {
 				// Check to see if ollama is running on the provided URL
 				if !ollama.IsOllamaRunning(ollamaURL) {
-					errorMessage := "ollama is not running on the provided URL"
-					a.OutputSignal.ErrorMessage = &errorMessage
-					a.OutputSignal.Status = 1
-					return fmt.Errorf(errorMessage)
+					a.OutputSignal.AddError(errors.New("ollama is not running on the provided URL"))
+					return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 				}
 			}
 			a.RootFlags.OllamaURL = ollamaURL
 
 			// Set OLLAMA_HOST environment variable for ollama client to pick up
 			if err := os.Setenv("OLLAMA_HOST", ollamaURL); err != nil {
-				errorMessage := "failed to set OLLAMA_HOST environment variable: " + err.Error()
-				a.OutputSignal.ErrorMessage = &errorMessage
-				a.OutputSignal.Status = 1
-				return fmt.Errorf(errorMessage)
+				a.OutputSignal.AddError(errors.New("failed to set OLLAMA_HOST environment variable: " + err.Error()))
+				return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 			}
 
 			// Check to see if the target ollama model is available
 			allowDownload, err := cmd.Flags().GetBool("allow-download")
 			if err != nil {
-				errorMessage := err.Error()
-				a.OutputSignal.ErrorMessage = &errorMessage
-				a.OutputSignal.Status = 1
-				return fmt.Errorf(errorMessage)
+				a.OutputSignal.AddError(err)
+				return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 			}
 			ollamaModel, err := cmd.Flags().GetString("ollama-model")
 			if err != nil {
-				errorMessage := err.Error()
-				a.OutputSignal.ErrorMessage = &errorMessage
-				a.OutputSignal.Status = 1
-				return fmt.Errorf(errorMessage)
+				a.OutputSignal.AddError(err)
+				return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 			}
 
 			if !ollama.ModelReady(ollamaURL, ollamaModel) {
 				if allowDownload {
 					// Download the model only if in allowed list
 					if !ollama.IsAllowedModel(ollamaModel) {
-						errorMessage := fmt.Sprintf("ollama model '%s' is not in the allowed models list", ollamaModel)
-						a.OutputSignal.ErrorMessage = &errorMessage
-						a.OutputSignal.Status = 1
-						return fmt.Errorf(errorMessage)
+						a.OutputSignal.AddError(fmt.Errorf("ollama model '%s' is not in the allowed models list", ollamaModel))
+						return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 					}
 					err := ollama.DownloadOllamaModel(ollamaURL, ollamaModel)
 					if err != nil {
-						errorMessage := "failed to download ollama model: " + err.Error()
-						a.OutputSignal.ErrorMessage = &errorMessage
-						a.OutputSignal.Status = 1
-						return fmt.Errorf(errorMessage)
+						a.OutputSignal.AddError(errors.New("failed to download ollama model: " + err.Error()))
+						return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 					}
 					// Check if model is ready after downloading
 					if !ollama.ModelReady(ollamaURL, ollamaModel) {
-						errorMessage := "ollama model is not ready after download"
-						a.OutputSignal.ErrorMessage = &errorMessage
-						a.OutputSignal.Status = 1
-						return fmt.Errorf(errorMessage)
+						a.OutputSignal.AddError(errors.New("ollama model is not ready after download"))
+						return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 					}
 				} else {
 					// Exit since model is not available
-					errorMessage := fmt.Sprintf("ollama model '%s' is not available and allow-download is not set", ollamaModel)
-					a.OutputSignal.ErrorMessage = &errorMessage
-					a.OutputSignal.Status = 1
-					return fmt.Errorf(errorMessage)
+					a.OutputSignal.AddError(fmt.Errorf("ollama model '%s' is not available and allow-download is not set", ollamaModel))
+					return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 				}
 			}
 
 			// Get model and set it in the root flags
 			model, err := ollama.GetModel(ollamaURL, ollamaModel)
 			if err != nil {
-				errorMessage := "failed to get ollama model: " + err.Error()
-				a.OutputSignal.ErrorMessage = &errorMessage
-				a.OutputSignal.Status = 1
-				return fmt.Errorf(errorMessage)
+				a.OutputSignal.AddError(errors.New("failed to get ollama model: " + err.Error()))
+				return fmt.Errorf(*a.OutputSignal.ErrorMessage)
 			}
 			a.RootFlags.OllamaModel = model
 

@@ -27,7 +27,7 @@ func CreateHTMLAnalysisPrompt(htmlCode string) string {
 		"- The 'potentialVulnerabilities' and 'potentialSensitiveData' fields are required boolean values.",
 		"- If 'potentialVulnerabilities' is true, provide a non-null 'vulnerabilitiesSummary'.",
 		"- If 'potentialSensitiveData' is true, provide a non-null 'sensitiveDataSummary'.",
-		"- If no vulnerabilities or sensitive data are found, set the respective boolean to false and omit the summary fields.",
+		"- If no vulnerabilities or sensitive data are found, set the respective boolean to false and set the respective summary field to null.",
 		"- Only add the requested JSON output. Do not include any additional information.",
 		"",
 		"Analyze the following HTML code:",
